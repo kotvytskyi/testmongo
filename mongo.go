@@ -41,11 +41,17 @@ func CreateTestMongoConnection(t *testing.T) (coll *mongo.Collection, teardown f
 }
 
 func getMongoUrl(t *testing.T) string {
-	url := os.Getenv("MONGO_TEST")
-	if url == "" {
-		url = "mongodb://localhost:27017"
-		t.Logf("No MONGO_TEST in env, defaulted to %s", url)
+	adr := os.Getenv("MONGO")
+	usr := os.Getenv("MONGO_USER")
+	pass := os.Getenv("MONGO_PASS")
+
+	if adr == "" {
+		adr = "localhost"
 	}
 
-	return url
+	res := fmt.Sprintf("mongodb://%s:%s@%s:27017", usr, pass, adr)
+
+	t.Logf("MONGO CONNECTION: %s", res)
+
+	return res
 }
