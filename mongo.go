@@ -11,10 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func CreateTestMongoConnection(t *testing.T) (coll *mongo.Collection, teardown func()) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*1)
-	defer cancel()
-
+func CreateTestMongoConnection(ctx context.Context, t *testing.T) (coll *mongo.Collection, teardown func()) {
 	url := getMongoUrl(t)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(url))
 	if err != nil {
@@ -50,8 +47,6 @@ func getMongoUrl(t *testing.T) string {
 	}
 
 	res := fmt.Sprintf("mongodb://%s:%s@%s:27017", usr, pass, adr)
-
-	t.Logf("MONGO CONNECTION: %s", res)
 
 	return res
 }
